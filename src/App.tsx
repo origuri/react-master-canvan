@@ -43,7 +43,7 @@ function App() {
       return oldToDos;
     }); */
     };
-  // app에 컨텍스트 태그를 하면 모든 컴포넌트에 적용되는 거니까 필요한 컴포넌트에 적용하기
+  // app에 컨텍스트 태그를 하면 모든 컴포넌트에 적용되는 거니까 필요한 컴포넌트에 적용하기.
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
