@@ -6,12 +6,14 @@ export enum Category {
   DONE = "DONE",
 }
 export interface IToDoState {
-  text: string;
-  id: number;
-  category: Category;
+  [key: string]: string[];
 }
 
 export const toDoState = atom({
   key: "toDo",
-  default: ["a", "b", "c", "d", "e", "f"],
+  default: {
+    to_do: ["a", "b", "c", "d", "e", "f"],
+    doing: [],
+    done: [],
+  },
 });
