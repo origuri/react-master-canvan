@@ -65,7 +65,7 @@ body{
 // main.tsx에 themeProvider로 감싸져있기 때문에 사용가능 함
 font-family: 'Roboto', sans-serif;
 background-color: ${(props) => props.theme.bgColor};
-color: ${(props) => props.theme.textColor}
+color: black
 }
 a{
 text-decoration: none;
