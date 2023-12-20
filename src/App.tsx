@@ -27,12 +27,13 @@ function App() {
   const onDragEnd = (info: DropResult) => {
     console.log(info);
     const { destination, draggableId, source } = info;
+    if (!destination) return;
     if (destination?.droppableId === source.droppableId) {
-      console.log("같은 보드이동");
       /* 
       1. 해당 객체에서 변화가 일어나는 배열만 가져온 후 수정한다. 
       2. 수정 후 변화가 일어나지 않은 배열을 붙여준다.
       */
+      console.log("같은 보드이동");
       setBoards((oldBoards) => {
         //oldBoards[todo] = ["a","b"]
         const newBoard = [...oldBoards[source.droppableId]];
@@ -46,7 +47,27 @@ function App() {
         return { ...oldBoards, [source.droppableId]: newBoard };
       });
     } else {
+      /* 
+        1. source에서 베열 삭제
+        2. destination에서 배열 추가 
+        3. 전체 board 복사 
+      */
       console.log("다른 보드 이동");
+      setBoards((oldBoards) => {
+        const sourceBoard = [...oldBoards[source.droppableId]];
+        const destinationBoard = [...oldBoards[destination?.droppableId]];
+
+        sourceBoard.splice(source.index, 1);
+        destinationBoard.splice(destination.index, 0, draggableId);
+
+        console.log(sourceBoard);
+        console.log(destinationBoard);
+        return {
+          ...oldBoards,
+          [source.droppableId]: sourceBoard,
+          [destination.droppableId]: destinationBoard,
+        };
+      });
     }
   };
   // app에 컨텍스트 태그를 하면 모든 컴포넌트에 적용되는 거니까 필요한 컴포넌트에 적용하기.
