@@ -16,6 +16,10 @@ const Title = styled.h2`
   margin-bottom: 30px;
   font-size: 18px;
 `;
+
+const Area = styled.div`
+  background-color: #fd79a8;
+`;
 interface IBoardProps {
   toDos: string[];
   boardId: string;
@@ -28,13 +32,13 @@ function Board({ toDos, boardId }: IBoardProps) {
       <Droppable droppableId={boardId}>
         {/* 함수 형태로 들어가야 함. */}
         {(dropMagic) => (
-          <div ref={dropMagic.innerRef} {...dropMagic.droppableProps}>
+          <Area ref={dropMagic.innerRef} {...dropMagic.droppableProps}>
             {toDos.map((todo, index) => (
               // 배열의 위치가 바뀌면 모든 props를 다시 자식에게 보내 리렌더링 함.
               <DraggableCard todo={todo} index={index} key={todo} />
             ))}
             {dropMagic.placeholder}
-          </div>
+          </Area>
         )}
       </Droppable>
     </Wrapper>
