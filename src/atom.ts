@@ -5,15 +5,17 @@ export enum Category {
   DOING = "DOING",
   DONE = "DONE",
 }
-export interface IToDoState {
+// 객체의 key값은 string이고 value는 string 배열 값이다
+export interface IBoardsState {
   [key: string]: string[];
 }
 
-export const toDoState = atom({
+export const boardsState = atom<IBoardsState>({
   key: "toDo",
   default: {
-    to_do: ["a", "b", "c", "d", "e", "f"],
-    doing: [],
-    done: [],
+    // 띄어쓰기 하려면 큰따옴표 사용
+    "To Do": ["a", "b"],
+    Doing: ["c", "d"],
+    Done: ["e", "f"],
   },
 });
