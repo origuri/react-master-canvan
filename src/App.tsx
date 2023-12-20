@@ -26,7 +26,7 @@ function App() {
   // 드래그가 끝나는 시점에 호출 되는 함수
   const onDragEnd = (info: DropResult) => {
     console.log(info);
-    const { destination, draggableId, source } = info;
+    const { destination, source } = info;
     if (!destination) return;
     if (destination?.droppableId === source.droppableId) {
       /* 
@@ -35,12 +35,14 @@ function App() {
       */
       console.log("같은 보드이동");
       setBoards((oldBoards) => {
-        //oldBoards[todo] = ["a","b"]
+        //newBoard[todo] =  [ { id: 1, text: "hello" }, { id: 2, text: "ori" }]
         const newBoard = [...oldBoards[source.droppableId]];
+        // todo[0] = { id: 1, text: "hello" }
+        const taskBoardObj = newBoard[source.index];
         // 1. splice 함수와 source.index를 사용해서 잡고 옮긴 index를 삭제한다
         newBoard.splice(source.index, 1);
         // 2.splice 함수와 destination.index, draggableId로 배열을 재구성한다
-        newBoard.splice(destination.index, 0, draggableId);
+        newBoard.splice(destination.index, 0, taskBoardObj);
         console.log(newBoard);
 
         // 수정 시에는 무조건 뒤에 적어줘야 함.
@@ -54,14 +56,23 @@ function App() {
       */
       console.log("다른 보드 이동");
       setBoards((oldBoards) => {
+        // source : todo -> destination : doing , index : 2
+
+        //    boards[todo] = [ { id: 1, text: "hello" }, { id: 2, text: "ori" }]
         const sourceBoard = [...oldBoards[source.droppableId]];
+        //     todo[0] = { id: 1, text: "hello" }
+        const taskBoardObj = sourceBoard[source.index];
+        //    boards[doing] = [{id : 3, text : "bye"}, {id : 4, text : "guri"}]
         const destinationBoard = [...oldBoards[destination?.droppableId]];
 
+        //  boards[todo] = [ { id: 2, text: "ori" }]
         sourceBoard.splice(source.index, 1);
-        destinationBoard.splice(destination.index, 0, draggableId);
+        // boards[doing] = [{id : 3, text : "bye"}, {id : 4, text : "guri"}, { id: 1, text: "hello" }]
+        destinationBoard.splice(destination.index, 0, taskBoardObj);
 
         console.log(sourceBoard);
         console.log(destinationBoard);
+        //
         return {
           ...oldBoards,
           [source.droppableId]: sourceBoard,
@@ -87,6 +98,7 @@ function App() {
           
           */}
           {Object.keys(boards).map((boardId) => (
+            //                       [ { id: 1, text: "hello" }, { id: 2, text: "ori" }]
             <Board boardId={boardId} toDos={boards[boardId]} key={boardId} />
           ))}
         </Boards>
