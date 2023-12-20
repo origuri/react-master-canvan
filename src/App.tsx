@@ -3,6 +3,7 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { boardsState } from "./atom";
 import Board from "./components/Board";
+import Trash from "./components/Trash";
 
 const Wrapper = styled.div`
   display: flex;
@@ -18,12 +19,14 @@ const Boards = styled.div`
   display: grid;
   width: 100%;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   gap: 10px;
 `;
 
 function App() {
   const [boards, setBoards] = useRecoilState(boardsState);
   // 드래그가 끝나는 시점에 호출 되는 함수
+
   const onDragEnd = (info: DropResult) => {
     console.log(info);
     const { destination, source } = info;
@@ -48,6 +51,8 @@ function App() {
         // 수정 시에는 무조건 뒤에 적어줘야 함.
         return { ...oldBoards, [source.droppableId]: newBoard };
       });
+    } else if (destination.droppableId === "trash") {
+      console.log("쓰레기통입니다.");
     } else {
       /* 
         1. source에서 베열 삭제
@@ -86,6 +91,7 @@ function App() {
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
         <Boards>
+          <Trash />
           {/* 
             const toDos = {toDo : ["b","c"], doing : ["y","z"]};
             Object.keys(toDos) => [toDo , doing]
