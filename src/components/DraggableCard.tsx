@@ -3,7 +3,7 @@ import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 
 interface ICardProps {
-  isDragging: boolean;
+  $isDragging: boolean;
 }
 
 const Card = styled.div<ICardProps>`
@@ -11,30 +11,31 @@ const Card = styled.div<ICardProps>`
   margin-bottom: 5px;
   padding: 10px 10px;
   background-color: ${(props) =>
-    props.isDragging ? "#dfe6e9" : props.theme.cardColor};
+    props.$isDragging ? "#dfe6e9" : props.theme.cardColor};
   box-shadow: ${(props) =>
-    props.isDragging ? "0px 2px 10px rgba(0, 0, 0, 0.3)" : "none"};
+    props.$isDragging ? "0px 2px 10px rgba(0, 0, 0, 0.3)" : "none"};
 `;
 
 interface IDraggableCard {
-  todo: string;
+  toDoText: string;
+  toDoId: number;
   index: number;
 }
 
-function DraggableCard({ todo, index }: IDraggableCard) {
-  console.log(todo, " 렌더됨");
+function DraggableCard({ toDoText, toDoId, index }: IDraggableCard) {
+  console.log(toDoText, " 렌더됨");
 
   return (
-    <Draggable draggableId={todo} index={index} key={todo}>
+    <Draggable draggableId={toDoId + ""} index={index}>
       {(dragMagic, dropSnapshot) => (
         <Card
           // 카드가 드래그 중인지 확인
-          isDragging={dropSnapshot.isDragging}
+          $isDragging={dropSnapshot.isDragging}
           ref={dragMagic.innerRef}
           {...dragMagic.draggableProps}
           {...dragMagic.dragHandleProps}
         >
-          {todo}
+          {toDoText}
         </Card>
       )}
     </Draggable>
