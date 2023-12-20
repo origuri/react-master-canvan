@@ -1,18 +1,12 @@
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
-} from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { toDoState } from "./atom";
-import DraggableCard from "./components/DraggableCard";
+import { boardsState } from "./atom";
 import Board from "./components/Board";
 
 const Wrapper = styled.div`
   display: flex;
-  max-width: 480px;
+  max-width: 1000px;
   width: 100%;
   margin: 0 auto;
   justify-content: center;
@@ -24,25 +18,37 @@ const Boards = styled.div`
   display: grid;
   width: 100%;
   grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 `;
 
 function App() {
-  const [toDos, setToDos] = useRecoilState(toDoState);
+  const [boards, setBoards] = useRecoilState(boardsState);
   // 드래그가 끝나는 시점에 호출 되는 함수
-  const onDragEnd =
-    (/* { draggableId, destination, source }: DropResult */) => {
-      /*  setToDos((oldToDos) => {
-      splice는 배열을 직접 조작하는 함수이므로 배열을 복사해서 사용한다.
-      const newToDos = [...oldToDos];
-      // 1. splice 함수와 source.index를 사용해서 잡고 옮긴 index를 삭제한다
-      newToDos.splice(source.index, 1);
-      // 2.splice 함수와 destination.index, draggableId로 배열을 재구성한다
-      newToDos.splice(Number(destination?.index), 0, draggableId);
-      console.log(newToDos);
+  const onDragEnd = (info: DropResult) => {
+    console.log(info);
+    const { destination, draggableId, source } = info;
+    if (destination?.droppableId === source.droppableId) {
+      console.log("같은 보드이동");
+      /* 
+      1. 해당 객체에서 변화가 일어나는 배열만 가져온 후 수정한다. 
+      2. 수정 후 변화가 일어나지 않은 배열을 붙여준다.
+      */
+      setBoards((oldBoards) => {
+        //oldBoards[todo] = ["a","b"]
+        const newBoard = [...oldBoards[source.droppableId]];
+        // 1. splice 함수와 source.index를 사용해서 잡고 옮긴 index를 삭제한다
+        newBoard.splice(source.index, 1);
+        // 2.splice 함수와 destination.index, draggableId로 배열을 재구성한다
+        newBoard.splice(destination.index, 0, draggableId);
+        console.log(newBoard);
 
-      return oldToDos;
-    }); */
-    };
+        // 수정 시에는 무조건 뒤에 적어줘야 함.
+        return { ...oldBoards, [source.droppableId]: newBoard };
+      });
+    } else {
+      console.log("다른 보드 이동");
+    }
+  };
   // app에 컨텍스트 태그를 하면 모든 컴포넌트에 적용되는 거니까 필요한 컴포넌트에 적용하기.
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -59,9 +65,9 @@ function App() {
             ))
           
           */}
-          {/*  {Object.keys(toDos).map((boardId) => (
-            <Board boardId={boardId} toDos={toDos[boardId]} key={boardId} />
-          ))} */}
+          {Object.keys(boards).map((boardId) => (
+            <Board boardId={boardId} toDos={boards[boardId]} key={boardId} />
+          ))}
         </Boards>
       </Wrapper>
     </DragDropContext>
